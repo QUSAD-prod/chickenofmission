@@ -1,8 +1,6 @@
 name: chickenofmission
 description: "A new Flutter project."
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -19,11 +17,31 @@ dependencies:
   hive: ^2.1.1
   hive_flutter: ^1.1.0
   json_annotation: ^4.5.0
+  auto_route: ^10.0.1
+  get_it: ^8.0.3
+  flutter_svg: ^2.0.17
+  sizer: ^3.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  auto_route_generator: ^10.0.1
+  build_runner: ^2.4.15
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
+    - assets/images/game/
+    - assets/images/welcome/
+    - assets/svg/
+    - assets/svg/game/
+    - assets/svg/welcome/
+
+  fonts:
+    - family: Araside
+      fonts:
+        - asset: fonts/Araside.ttf

@@ -52,10 +52,8 @@ class BoardManager extends StateNotifier<Board> {
   }
 
   Tile _calculate(Tile tile, List<Tile> tiles, direction) {
-    bool asc =
-        direction == SwipeDirection.left || direction == SwipeDirection.up;
-    bool vert =
-        direction == SwipeDirection.up || direction == SwipeDirection.down;
+    bool asc = direction == SwipeDirection.left || direction == SwipeDirection.up;
+    bool vert = direction == SwipeDirection.up || direction == SwipeDirection.down;
     // Get the first index from the left in the row
     // Example: for left swipe that can be: 0, 4, 8, 12
     // for right swipe that can be: 3, 7, 11, 15
@@ -87,23 +85,16 @@ class BoardManager extends StateNotifier<Board> {
 
     // Return immutable copy of the current tile with the new next index
     // which can either be the top left index in the row or the last tile nextIndex/index + 1
-    return tile.copyWith(
-        nextIndex: vert ? verticalOrder.indexOf(nextIndex) : nextIndex);
+    return tile.copyWith(nextIndex: vert ? verticalOrder.indexOf(nextIndex) : nextIndex);
   }
 
   //Move the tile in the direction
   bool move(SwipeDirection direction) {
-    bool asc =
-        direction == SwipeDirection.left || direction == SwipeDirection.up;
-    bool vert =
-        direction == SwipeDirection.up || direction == SwipeDirection.down;
+    bool asc = direction == SwipeDirection.left || direction == SwipeDirection.up;
+    bool vert = direction == SwipeDirection.up || direction == SwipeDirection.down;
     // Sort the list of tiles by index.
     // If user swipes vertically use the verticalOrder list to retrieve the up/down index
-    state.tiles.sort(((a, b) =>
-        (asc ? 1 : -1) *
-        (vert
-            ? verticalOrder[a.index].compareTo(verticalOrder[b.index])
-            : a.index.compareTo(b.index))));
+    state.tiles.sort(((a, b) => (asc ? 1 : -1) * (vert ? verticalOrder[a.index].compareTo(verticalOrder[b.index]) : a.index.compareTo(b.index))));
 
     List<Tile> tiles = [];
 
@@ -119,8 +110,7 @@ class BoardManager extends StateNotifier<Board> {
         // Assign current tile nextIndex or index to the next tile if its allowed to be moved.
         if (tile.value == next.value) {
           // If user swipes vertically use the verticalOrder list to retrieve the up/down index else use the existing index
-          var index = vert ? verticalOrder[tile.index] : tile.index,
-              nextIndex = vert ? verticalOrder[next.index] : next.index;
+          var index = vert ? verticalOrder[tile.index] : tile.index, nextIndex = vert ? verticalOrder[next.index] : next.index;
           if (_inRange(index, nextIndex)) {
             tiles.add(next.copyWith(nextIndex: tile.nextIndex));
             // Skip next iteration if next tile was already assigned nextIndex.
@@ -162,8 +152,7 @@ class BoardManager extends StateNotifier<Board> {
       if (i + 1 < l) {
         //sum the number of the two tiles with same index and mark the tile as merged and skip the next iteration.
         var next = state.tiles[i + 1];
-        if (tile.nextIndex == next.nextIndex ||
-            tile.index == next.nextIndex && tile.nextIndex == null) {
+        if (tile.nextIndex == next.nextIndex || tile.index == next.nextIndex && tile.nextIndex == null) {
           value = tile.value + next.value;
           merged = true;
           score += tile.value;
@@ -175,11 +164,7 @@ class BoardManager extends StateNotifier<Board> {
         tilesMoved = true;
       }
 
-      tiles.add(tile.copyWith(
-          index: tile.nextIndex ?? tile.index,
-          nextIndex: null,
-          value: value,
-          merged: merged));
+      tiles.add(tile.copyWith(index: tile.nextIndex ?? tile.index, nextIndex: null, value: value, merged: merged));
       indexes.add(tiles.last.index);
     }
 
@@ -278,10 +263,7 @@ class BoardManager extends StateNotifier<Board> {
   //undo one round only
   void undo() {
     if (state.undo != null) {
-      state = state.copyWith(
-          score: state.undo!.score,
-          best: state.undo!.best,
-          tiles: state.undo!.tiles);
+      state = state.copyWith(score: state.undo!.score, best: state.undo!.best, tiles: state.undo!.tiles);
     }
   }
 

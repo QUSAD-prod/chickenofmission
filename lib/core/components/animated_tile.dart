@@ -4,13 +4,7 @@ import '../models/tile.dart';
 
 class AnimatedTile extends AnimatedWidget {
   //We use Listenable.merge in order to update the animated widget when both of the controllers have change
-  AnimatedTile(
-      {super.key,
-      required this.moveAnimation,
-      required this.scaleAnimation,
-      required this.tile,
-      required this.child,
-      required this.size})
+  AnimatedTile({super.key, required this.moveAnimation, required this.scaleAnimation, required this.tile, required this.child, required this.size})
       : super(listenable: Listenable.merge([moveAnimation, scaleAnimation]));
 
   final Tile tile;
@@ -45,13 +39,11 @@ class AnimatedTile extends AnimatedWidget {
       scale = TweenSequence<double>(
         <TweenSequenceItem<double>>[
           TweenSequenceItem<double>(
-            tween: Tween<double>(begin: 1.0, end: 1.5)
-                .chain(CurveTween(curve: Curves.easeOut)),
+            tween: Tween<double>(begin: 1.0, end: 1.5).chain(CurveTween(curve: Curves.easeOut)),
             weight: 50.0,
           ),
           TweenSequenceItem<double>(
-            tween: Tween<double>(begin: 1.5, end: 1.0)
-                .chain(CurveTween(curve: Curves.easeIn)),
+            tween: Tween<double>(begin: 1.5, end: 1.0).chain(CurveTween(curve: Curves.easeIn)),
             weight: 50.0,
           ),
         ],
