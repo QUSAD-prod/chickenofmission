@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chickenofmission/features/about/about_screen.dart';
 import 'package:chickenofmission/features/game/game_screen.dart';
 import 'package:chickenofmission/features/welcome/welcome_screen.dart';
 
@@ -19,6 +20,9 @@ class AppRouter extends RootStackRouter {
         ),
         AutoRoute(
           page: GameRoute.page,
+        ),
+        AutoRoute(
+          page: AboutRoute.page,
         ),
       ];
 }

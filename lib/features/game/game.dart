@@ -2,8 +2,10 @@ import 'package:chickenofmission/core/components/grand_animated_inkwell.dart';
 import 'package:chickenofmission/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/components/empy_board.dart';
@@ -22,17 +24,27 @@ class Game extends ConsumerStatefulWidget {
 class _GameState extends ConsumerState<Game> with TickerProviderStateMixin, WidgetsBindingObserver {
   bool onPause = false;
 
+  final _settingsBox = GetIt.I<Box<int>>();
+  final _audioSource = GetIt.I<AudioSource>();
+  final _soLoud = SoLoud.instance;
+  late final _soundEnabled = _settingsBox.get('sound', defaultValue: 1) == 1;
+
   //The contoller used to move the the tiles
   late final AnimationController _moveController = AnimationController(
     duration: const Duration(milliseconds: 100),
     vsync: this,
-  )..addStatusListener((status) {
-      //When the movement finishes merge the tiles and start the scale animation which gives the pop effect.
-      if (status == AnimationStatus.completed) {
-        ref.read(boardManager.notifier).merge();
-        _scaleController.forward(from: 0.0);
-      }
-    });
+  )..addStatusListener(
+      (status) async {
+        //When the movement finishes merge the tiles and start the scale animation which gives the pop effect.
+        if ((status == AnimationStatus.forward || status == AnimationStatus.reverse) && _soundEnabled) {
+          await _soLoud.play(_audioSource);
+        }
+        if (status == AnimationStatus.completed) {
+          ref.read(boardManager.notifier).merge();
+          _scaleController.forward(from: 0.0);
+        }
+      },
+    );
 
   //The curve animation for the move animation controller.
   late final CurvedAnimation _moveAnimation = CurvedAnimation(
@@ -44,14 +56,16 @@ class _GameState extends ConsumerState<Game> with TickerProviderStateMixin, Widg
   late final AnimationController _scaleController = AnimationController(
     duration: const Duration(milliseconds: 200),
     vsync: this,
-  )..addStatusListener((status) {
-      //When the scale animation finishes end the round and if there is a queued movement start the move controller again for the next direction.
-      if (status == AnimationStatus.completed) {
-        if (ref.read(boardManager.notifier).endRound()) {
-          _moveController.forward(from: 0.0);
+  )..addStatusListener(
+      (status) {
+        //When the scale animation finishes end the round and if there is a queued movement start the move controller again for the next direction.
+        if (status == AnimationStatus.completed) {
+          if (ref.read(boardManager.notifier).endRound()) {
+            _moveController.forward(from: 0.0);
+          }
         }
-      }
-    });
+      },
+    );
 
   //The curve animation for the scale animation controller.
   late final CurvedAnimation _scaleAnimation = CurvedAnimation(

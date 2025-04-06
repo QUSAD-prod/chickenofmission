@@ -5,6 +5,7 @@ import 'package:chickenofmission/core/components/grand_animated_inkwell.dart';
 import 'package:chickenofmission/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 @RoutePage()
@@ -43,12 +44,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     children: [
                       GrandAnimatedInkWell(
                         child: Image.asset('assets/images/welcome/info.png'),
-                        onTap: () => {},
+                        onTap: () async => await GetIt.I<AppRouter>().push(const AboutRoute()),
                       ),
                       Spacer(),
-                      GrandAnimatedInkWell(
-                        child: Image.asset('assets/images/welcome/volume.png'),
-                        onTap: () => {},
+                      ValueListenableBuilder(
+                        valueListenable: GetIt.I<Box<int>>().listenable(),
+                        builder: (BuildContext context, Box box, Widget? widget) {
+                          return GrandAnimatedInkWell(
+                            child: Image.asset(
+                              box.get('sound', defaultValue: 1) == 1 ? 'assets/images/welcome/volume.png' : 'assets/images/welcome/mute.png',
+                            ),
+                            onTap: () async {
+                              if (box.get('sound', defaultValue: 1) == 1) {
+                                await box.put('sound', 0);
+                              } else {
+                                await box.put('sound', 1);
+                              }
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
