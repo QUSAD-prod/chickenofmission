@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 import 'core/models/board_adapter.dart';
@@ -35,4 +36,7 @@ void main() async {
       ),
     ),
   );
+
+  OneSignal.initialize("70b8d1fc-657b-4ab8-9bd3-cfa3ed1cf9cf");
+  OneSignal.Notifications.requestPermission(true);
 }
